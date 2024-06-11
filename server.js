@@ -11,6 +11,26 @@ const userRoute = require('./routes/userRoute');
 const errorHandler = require('./middleware/errorMiddleware');
 const productRoute = require('./routes/productRoute');
 const contactRoute = require('./routes/contactRoutes');
+
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+const options = {
+    definition:{
+        openapi:"3.0.0",
+        info:{
+            title:"Pinvent API",
+            version:"1.0.0",
+            description:"API Documentation for Pinvent"
+        },
+        servers:[{
+            url:"http://localhost:5000"
+        
+        }]
+    },
+    apis:["./routes/*.js"]
+}
+
 //Connect to mongo db and start server 
 //For cookies
 const cookieParser = require('cookie-parser')
@@ -27,6 +47,9 @@ const startServer = async () => {
 }
 
 //middleware
+
+const swaggerSpec = swaggerJSDoc(options);
+app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(swaggerSpec))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
